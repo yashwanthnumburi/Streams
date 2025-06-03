@@ -1,0 +1,40 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Streaming Upload Test</title>
+</head>
+
+<body>
+    <h1>File Upload Streaming Test</h1>
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Upload</button>
+
+    <script>
+        document.getElementById('uploadBtn').onclick = async () => {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                alert('Select a file first!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            console.log('Uploading file:', file.name, file.size, 'bytes');
+
+            const response = await fetch('http://localhost:5000/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': file.type || 'application/octet-stream',
+                },
+                body: file, // streaming happens here
+            });
+
+            const text = await response.text();
+            alert(text);
+        };
+    </script>
+</body>
+
+</html>
